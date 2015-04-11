@@ -8,6 +8,7 @@
     using Nancy.Hosting.Self;
     using Nancy.Responses;
     using Nancy.Routing.Constraints;
+    using Nancy.TinyIoc;
 
     public class Program
     {
@@ -115,6 +116,26 @@
                 outputStream.Write(new[] { (byte)'[' }, 0, 1);
                 serializer.Serialize(contentType, model, outputStream);
                 outputStream.Write(new[] { (byte)']' }, 0, 1);
+            }
+        }
+
+        public class OmnisharpSpeaker : ISpeaker
+        {
+            public Message SpeakTo(Person person)
+            {
+                return new Message
+                {
+                    Text = string.Format("Hello {0}, Omnisharp is great!", person),
+                };
+            }
+        }
+
+        public class CustomBootstrapper : DefaultNancyBootstrapper
+        {
+            protected override void ConfigureApplicationContainer(TinyIoCContainer container)
+            {
+                base.ConfigureApplicationContainer(container);
+                container.Register<ISpeaker>(new OmnisharpSpeaker());
             }
         }
     }
