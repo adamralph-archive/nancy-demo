@@ -34,6 +34,20 @@
             Message SpeakTo(Person person);
         }
 
+        public class Person
+        {
+            public string FirstName { get; set; }
+
+            public string LastName { get; set; }
+
+            public override string ToString()
+            {
+                return string.IsNullOrWhiteSpace(LastName)
+                    ? FirstName
+                    : string.Concat(FirstName, " ", LastName);
+            }
+        }
+
         public class Message
         {
             public Message()
@@ -54,20 +68,6 @@
                 {
                     Text = string.Format("Hello {0}, Nancy is great!", person),
                 };
-            }
-        }
-
-        public class Person
-        {
-            public string FirstName { get; set; }
-
-            public string LastName { get; set; }
-
-            public override string ToString()
-            {
-                return string.IsNullOrWhiteSpace(LastName)
-                    ? FirstName
-                    : string.Concat(FirstName, " ", LastName);
             }
         }
 
@@ -92,51 +92,51 @@
             }
         }
 
-        public class ArrayAllTheThingsJsonSerializer : ISerializer
-        {
-            private readonly DefaultJsonSerializer serializer;
+        //public class ArrayAllTheThingsJsonSerializer : ISerializer
+        //{
+        //    private readonly DefaultJsonSerializer serializer;
 
-            public ArrayAllTheThingsJsonSerializer(DefaultJsonSerializer serializer)
-            {
-                this.serializer = serializer;
-            }
+        //    public ArrayAllTheThingsJsonSerializer(DefaultJsonSerializer serializer)
+        //    {
+        //        this.serializer = serializer;
+        //    }
 
-            public IEnumerable<string> Extensions
-            {
-                get { return serializer.Extensions; }
-            }
+        //    public IEnumerable<string> Extensions
+        //    {
+        //        get { return serializer.Extensions; }
+        //    }
 
-            public bool CanSerialize(string contentType)
-            {
-                return serializer.CanSerialize(contentType);
-            }
+        //    public bool CanSerialize(string contentType)
+        //    {
+        //        return serializer.CanSerialize(contentType);
+        //    }
 
-            public void Serialize<TModel>(string contentType, TModel model, Stream outputStream)
-            {
-                outputStream.Write(new[] { (byte)'[' }, 0, 1);
-                serializer.Serialize(contentType, model, outputStream);
-                outputStream.Write(new[] { (byte)']' }, 0, 1);
-            }
-        }
+        //    public void Serialize<TModel>(string contentType, TModel model, Stream outputStream)
+        //    {
+        //        outputStream.Write(new[] { (byte)'[' }, 0, 1);
+        //        serializer.Serialize(contentType, model, outputStream);
+        //        outputStream.Write(new[] { (byte)']' }, 0, 1);
+        //    }
+        //}
 
-        public class OmnisharpSpeaker : ISpeaker
-        {
-            public Message SpeakTo(Person person)
-            {
-                return new Message
-                {
-                    Text = string.Format("Hello {0}, Omnisharp is great!", person),
-                };
-            }
-        }
+        //public class OmnisharpSpeaker : ISpeaker
+        //{
+        //    public Message SpeakTo(Person person)
+        //    {
+        //        return new Message
+        //        {
+        //            Text = string.Format("Hello {0}, Omnisharp is great!", person),
+        //        };
+        //    }
+        //}
 
-        public class CustomBootstrapper : DefaultNancyBootstrapper
-        {
-            protected override void ConfigureApplicationContainer(TinyIoCContainer container)
-            {
-                base.ConfigureApplicationContainer(container);
-                container.Register<ISpeaker>(new OmnisharpSpeaker());
-            }
-        }
+        //public class CustomBootstrapper : DefaultNancyBootstrapper
+        //{
+        //    protected override void ConfigureApplicationContainer(TinyIoCContainer container)
+        //    {
+        //        base.ConfigureApplicationContainer(container);
+        //        container.Register<ISpeaker>(new OmnisharpSpeaker());
+        //    }
+        //}
     }
 }
